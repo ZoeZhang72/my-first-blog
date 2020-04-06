@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'article',  # 激活放置博客代码的app
+    'userprofile',  # 激活用户登录登出app
 ]
 
 MIDDLEWARE = [

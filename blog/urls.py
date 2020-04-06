@@ -10,4 +10,8 @@ urlpatterns = [
 
     # 配置app的url: 参数article/分配了app的访问路径; include将路径分给下一步处理; namespace可以保证反查到唯一的url,即使不同的app用了相同的url
     path('', include('article.urls')),
+
+    # 用户管理
+    path('userprofile/', include('userprofile.urls', namespace='userprofile')),
+
 ]
