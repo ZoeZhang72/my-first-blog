@@ -35,8 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'password_reset',  # 激活第三方重置密码app
     'article',  # 激活放置博客代码的app
     'userprofile',  # 激活用户登录登出app
+
 ]
 
 MIDDLEWARE = [
@@ -122,3 +124,15 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),  # 指定静态文件存放位置
 )
+# SMTP服务器，改为你的邮箱的smtp!
+EMAIL_HOST = 'smtp.qq.com'
+# 改为你自己的邮箱名！
+EMAIL_HOST_USER = '1750526135@qq.com'
+# 你的邮箱密码
+EMAIL_HOST_PASSWORD = 'ejznrmqfaqgeihhc'
+# 发送邮件的端口
+EMAIL_PORT = 25
+# 是否使用 TLS
+EMAIL_USE_TLS = True
+# 默认的发件人
+DEFAULT_FROM_EMAIL = 'zoe的博客 <1750526135@qq.com>'

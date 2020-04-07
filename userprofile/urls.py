@@ -14,4 +14,7 @@ urlpatterns = [
     # 用户退出
     path('logout/', views.user_logout, name='logout'),
 
+    # 用户删除
+    path('delete/<int:id>/', views.user_delete, name='delete'),
+
 ]

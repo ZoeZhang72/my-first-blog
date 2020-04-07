@@ -4,12 +4,22 @@ import markdown
 from django.http import HttpResponse
 from .forms import ArticlePostForm  # 引入ArticlePostForm表单类
 from django.contrib.auth.models import User  # 引入User模型
+from django.core.paginator import Paginator  # 引入分页模块
+from django.db.models import Q  # 引入 Q 对象
 
 
 # 视图函数
 def article_list(request):  # request与网页发来的请求有关
     # 数据类方法，取出所有博客文章
-    articles = ArticlePost.objects.all()
+    article_list = ArticlePost.objects.all()
+
+    # 每页显示 1 篇文章
+    paginator = Paginator(article_list, 3)
+    # 获取 url 中的页码
+    page = request.GET.get('page')
+    # 将导航对象相应的页码内容返回给 articles
+    articles = paginator.get_page(page)
+
     # context定义了需要传递给模板的上下文，这里是articles
     context = {'articles': articles}
     # render变量：request是固定的request对象，context定义了需要传递给模块的上下文

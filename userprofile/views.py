@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login,  logout
 from django.http import HttpResponse
 from .forms import UserLoginForm, UserRegisterForm
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required  # 引入验证登录的装饰器
 
 
 # Create your views here.
@@ -57,3 +59,19 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect("article:article_list")
+
+
+@login_required(login_url='/userprofile/login/')  # 若用户不登录则重定向页面
+def user_delete(request, id):
+    if request.method == 'POST':
+        user =  User.objects.get(id=id)
+        # 验证登录用户，待删除用户是否相同
+        if request.user == user:
+            # 退出登录，删除数据并返回博客列表
+            logout(request)
+            user.delete()
+            return redirect("article:article_list")
+        else:
+            return HttpResponse("你没有删除操作的权限。")
+    else:
+        return HttpResponse("仅接受post请求。")
