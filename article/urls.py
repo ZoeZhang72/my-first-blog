@@ -1,6 +1,6 @@
 # path将根路径为article的访问都分发给article这个app去处理。但是app通常有多个页面地址，因此需要app自己也有一个路由分发，就是article.urls
 from django.urls import path
-from . import views  # 引入views.py
+from .import views  # 引入views.py
 
 # 正在部署的应用的名称
 app_name = 'article'

@@ -6,6 +6,9 @@ from .forms import ArticlePostForm  # 引入ArticlePostForm表单类
 from django.contrib.auth.models import User  # 引入User模型
 from django.core.paginator import Paginator  # 引入分页模块
 from django.db.models import Q  # 引入 Q 对象
+from comment.models import Comment
+from django.contrib.auth.decorators import login_required
+
 
 
 # 视图函数
@@ -44,17 +47,30 @@ def article_detail(request, id):
     # 取出相应的文章
     article = ArticlePost.objects.get(id=id)  # 找出id值相符合的唯一一篇文章
 
-    # 将markdown语法渲染成html样式
-    article.body = markdown.markdown(article.body,  # 需要渲染的文章正文
-                                     extensions=[  # 添加扩展
-                                         # 包含 缩写、表格等常用扩展
+    # 浏览量 +1
+    article.total_views += 1
+    article.save(update_fields=['total_views'])
+
+    # 取出文章评论
+    comments = Comment.objects.filter(article=id)
+
+    article.body = markdown.markdown(article.body,
+                                     extensions=[
                                          'markdown.extensions.extra',
-                                         # 语法高亮扩展
                                          'markdown.extensions.codehilite',
-                                     ])
+                                     ]
+                                     )
+    # 将markdown语法渲染成html样式
+    md = markdown.Markdown(
+        extensions=[
+            'markdown.extensions.extra',
+            'markdown.extensions.codehilite',
+            'markdown.extensions.toc',
+        ]
+    )
 
     # 需要传递给模板的对象
-    context = {'article': article}
+    context = {'article': article, 'toc': md.toc, 'comments': comments}
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
 
@@ -99,10 +115,17 @@ def article_safe_delete(request, id):
 
 
 # 更新文章
+# 提醒用户登录
+@login_required(login_url='/userprofile/login/')
 def article_update(request, id):
 
     # 获取需要修改的具体文章对象
     article = ArticlePost.objects.get(id=id)
+
+    # 过滤非作者的用户
+    if request.user != article.author:
+        return HttpResponse("抱歉，你无权修改这篇文章。")
+
     # 判断用户是否为 POST 提交表单数据
     if request.method == "POST":
         # 将提交的数据赋值到表单实例中
