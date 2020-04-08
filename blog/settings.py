@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'password_reset',  # 激活第三方重置密码app
     'article',  # 激活放置博客代码的app
     'userprofile',  # 激活用户登录登出app
+    'comment',  # 激活用户评论app
 
 ]
 

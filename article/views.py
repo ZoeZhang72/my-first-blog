@@ -10,18 +10,31 @@ from django.db.models import Q  # 引入 Q 对象
 
 # 视图函数
 def article_list(request):  # request与网页发来的请求有关
-    # 数据类方法，取出所有博客文章
-    article_list = ArticlePost.objects.all()
+    search = request.GET.get('search')
+    order = request.GET.get('order')
+    # 用户搜索逻辑
+    if search:
+            # 用 Q对象 进行联合搜索
+            article_list = ArticlePost.objects.filter(
+                Q(title__icontains=search) | Q(body__icontains=search)
+            )
+    else:
+        search = ''
+        article_list = ArticlePost.objects.all()
+    if order == 'total_views':
+        article_list = article_list.order_by('-total_views')
+    else:
+        pass
 
-    # 每页显示 1 篇文章
+    # 每页显示 3 篇文章
     paginator = Paginator(article_list, 3)
     # 获取 url 中的页码
     page = request.GET.get('page')
     # 将导航对象相应的页码内容返回给 articles
     articles = paginator.get_page(page)
 
-    # context定义了需要传递给模板的上下文，这里是articles
-    context = {'articles': articles}
+    # context定义了需要传递给模板的上下文
+    context = {'articles': articles, 'order': order, 'search': search}
     # render变量：request是固定的request对象，context定义了需要传递给模块的上下文
     return render(request, 'article/list.html', context)
 
