@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect  # redirect重定向模块
 from .models import ArticlePost
 import markdown
 from django.http import HttpResponse
@@ -8,7 +8,6 @@ from django.core.paginator import Paginator  # 引入分页模块
 from django.db.models import Q  # 引入 Q 对象
 from comment.models import Comment
 from django.contrib.auth.decorators import login_required
-
 
 
 # 视图函数
@@ -45,7 +44,7 @@ def article_list(request):  # request与网页发来的请求有关
 # 文章详情,参数id是Django自动生成用于索引数据表的主键(Primary Key)
 def article_detail(request, id):
     # 取出相应的文章
-    article = ArticlePost.objects.get(id=id)  # 找出id值相符合的唯一一篇文章
+    article = ArticlePost.objects.get(id=id)  # 在所有文章中找出id值相符合的唯一一篇文章
 
     # 浏览量 +1
     article.total_views += 1

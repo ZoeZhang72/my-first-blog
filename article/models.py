@@ -27,10 +27,10 @@ class ArticlePost(models.Model):
     def get_absolute_url(self):
         return reverse('article:article_detail', args=[self.id])
 
-    # 内部类 class Meta 用于给 model 定义元数据,ordering是元组，只包含一个元素要加逗号.
+    # 内部类 Meta中的ordering定义了数据的排列方式。
     class Meta:
-        ordering = ('-created',)  # 使模型返回的数据排列顺序为倒序.
-    # 定义当调用对象的 str() 方法时的返回值内容
+        ordering = ('-created',)  # -created表示将以创建时间的倒序排列
 
+    # __str__方法定义了需要表示数据时应该显示的名称
     def __str__(self):
         return self.title
