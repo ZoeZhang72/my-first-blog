@@ -75,6 +75,7 @@ def article_detail(request, id):
 
 
 # 写文章
+@login_required(login_url='/userprofile/login/')
 def article_create(request):
     # 判断用户是否提交数据
     if request.method == "POST":
@@ -84,8 +85,8 @@ def article_create(request):
         if article_post_form.is_valid():  # Django内置方法:is_valid
             # 保存数据，但暂时不提交到数据库中
             new_article = article_post_form.save(commit=False)
-            # 指定数据库中 id=1 的用户为作者
-            new_article.author = User.objects.get(id=1)
+            # 指定登录的用户为作者
+            new_article.author = User.objects.get(id=request.user.id)
             # 将新文章保存到数据库中
             new_article.save()
             # 完成后返回到文章列表
