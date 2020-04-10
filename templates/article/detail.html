@@ -13,34 +13,24 @@
 <!-- 文章详情 -->
 <div class="container">
     <div class="row">
-        <!-- 标题及作者 -->
         <div class="col-9">
+            <!-- 标题及作者 -->
             <h1 class="mt-4 mb-4">{{ article.title }}</h1>
             <div class="alert alert-success">
-            <div>
-            作者：{{ article.author }}
-            {% if user == article.author %}
-                · <a href="#" onclick="confirm_safe_delete()">删除文章</a>
-                · <a href="{% url "article:article_update" article.id %}">
-                    编辑文章
-                </a>
+                <div>
+                    作者：{{ article.author }}
+                    {% if user == article.author %}
+                        · <a href="#" onclick="confirm_safe_delete()">删除文章</a>
+                        · <a href="{% url "article:article_update" article.id %}"> 编辑文章</a>
             {% endif %}
+
         </div>
         <div>
+
             浏览：{{ article.total_views }}
         </div>
     </div>
 
-    <!-- 新增的目录 -->
-            <div class="col-3 mt-4">
-            <h4><strong>目录</strong></h4>
-            <hr>
-            <div>
-                {{ toc|safe }}
-            </div>
-        </div>
-    </div>
-</div>
         <!-- 一个隐藏的表单 -->
 <form
       style="display:none;"
@@ -92,6 +82,8 @@
         <br>
     {% endif %}
 
+
+
     <!-- 显示评论 -->
     <h4>共有{{ comments.count }}条评论</h4>
     <div>
@@ -110,11 +102,18 @@
         {% endfor %}
     </div>
 </div>
-
-<!-- 目录 -->
-<div class="col-3 mt-4">
-
+             <!-- 新增的目录 -->
+        <div class="col-3 mt-4">
+            <h4><strong>目录</strong></h4>
+            <hr>
+            <div>
+                {{ toc|safe }}
+            </div>
+        </div>
+    </div>
 </div>
+
+
 
 <script>
     // 删除文章的函数

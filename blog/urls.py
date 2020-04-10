@@ -1,5 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include  # 引入include方法,path为Django的路由语法
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 # 正在部署的应用的名称
 app_name = 'article'
@@ -20,3 +23,6 @@ urlpatterns = [
     path('comment/', include('comment.urls', namespace='comment')),
 
 ]
+
+# 上传图片的URL路径
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

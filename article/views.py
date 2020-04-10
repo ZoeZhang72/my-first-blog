@@ -53,13 +53,7 @@ def article_detail(request, id):
     # 取出文章评论
     comments = Comment.objects.filter(article=id)
 
-    article.body = markdown.markdown(article.body,
-                                     extensions=[
-                                         'markdown.extensions.extra',
-                                         'markdown.extensions.codehilite',
-                                     ]
-                                     )
-    # 将markdown语法渲染成html样式
+    # 修改 Markdown 语法渲染
     md = markdown.Markdown(
         extensions=[
             'markdown.extensions.extra',
@@ -67,6 +61,7 @@ def article_detail(request, id):
             'markdown.extensions.toc',
         ]
     )
+    article.body = md.convert(article.body)
 
     # 需要传递给模板的对象
     context = {'article': article, 'toc': md.toc, 'comments': comments}
