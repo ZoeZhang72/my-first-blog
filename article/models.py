@@ -4,6 +4,19 @@ from django.utils import timezone  # timezone 用于处理时间相关事务。
 from django.urls import reverse  # 路由重定向
 
 
+# 文章栏目数据模型
+class ArticleColumn(models.Model):
+
+    # 栏目标题
+    title = models.CharField(max_length=100, blank=True)
+
+    # 创建时间
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.title
+
+
 # 博客文章数据模型
 class ArticlePost(models.Model):
     # 文章作者。参数 on_delete 用于指定数据删除的方式, 外键ForeignKey解决一对多关系
@@ -26,6 +39,15 @@ class ArticlePost(models.Model):
     # 获取文章地址，重新定向
     def get_absolute_url(self):
         return reverse('article:article_detail', args=[self.id])
+
+    # 文章栏目的 “一对多” 外键
+    column = models.ForeignKey(
+        ArticleColumn,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='article'
+    )
 
     # 内部类 Meta中的ordering定义了数据的排列方式。
     class Meta:
