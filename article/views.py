@@ -10,11 +10,12 @@ from comment.models import Comment
 from django.contrib.auth.decorators import login_required
 
 
-# 视图函数
+# 文章视图函数
 def article_list(request):  # request与网页发来的请求有关
     search = request.GET.get('search')
     order = request.GET.get('order')
-    # 用户搜索逻辑
+
+    # 用户搜索
     if search:
             # 用 Q对象 进行联合搜索
             article_list = ArticlePost.objects.filter(
@@ -23,15 +24,18 @@ def article_list(request):  # request与网页发来的请求有关
     else:
         search = ''
         article_list = ArticlePost.objects.all()
-    if order == 'total_views':
+
+    if order == 'total_views':  # order_by()方法指定对象如何进行排序
         article_list = article_list.order_by('-total_views')
     else:
         pass
 
     # 每页显示 3 篇文章
     paginator = Paginator(article_list, 3)
+
     # 获取 url 中的页码
     page = request.GET.get('page')
+
     # 将导航对象相应的页码内容返回给 articles
     articles = paginator.get_page(page)
 
@@ -77,26 +81,22 @@ def article_create(request):
         # 将提交的数据赋值到表单实例中
         article_post_form = ArticlePostForm(data=request.POST)
         # 判断提交的数据是否满足模型的要求
-        if article_post_form.is_valid():  # Django内置方法:is_valid
-            # 保存数据，但暂时不提交到数据库中
-            new_article = article_post_form.save(commit=False)
-            # 指定登录的用户为作者
-            new_article.author = User.objects.get(id=request.user.id)
-            # 将新文章保存到数据库中
-            new_article.save()
-            # 完成后返回到文章列表
-            return redirect("article:article_list")
+        if article_post_form.is_valid():  # Django内置方法:is_valid，验证数据返回布尔值
+            new_article = article_post_form.save(commit=False)  # 保存数据，但暂时不提交到数据库中
+            new_article.author = User.objects.get(id=request.user.id)  # 指定登录的用户为作者
+            new_article.save()  # 将新文章保存到数据库中
+
+            return redirect("article:article_list")  # 完成后返回到文章列表
+
         # 如果数据不合法，返回错误信息
         else:
             return HttpResponse("表单内容有误，请重新填写。")
+
     # 如果用户请求获取数据
     else:
-        # 创建表单类实例
-        article_post_form = ArticlePostForm()
-        # 赋值上下文
-        context = {'article_post_form': article_post_form}
-        # 返回模板
-        return render(request, 'article/create.html', context)
+        article_post_form = ArticlePostForm()  # 创建表单类实例
+        context = {'article_post_form': article_post_form}  # 赋值上下文
+        return render(request, 'article/create.html', context)  # 返回模板
 
 
 # 安全删除文章

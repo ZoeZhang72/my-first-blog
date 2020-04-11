@@ -31,10 +31,13 @@ def user_register(request):
         return render(request, 'userprofile/register.html', context)
     else:
         return HttpResponse("请使用GET或POST请求数据")
+
+
 # 用户登录
 def user_login(request):
     if request.method == 'POST':
         user_login_form = UserLoginForm(data=request.POST)
+
         if user_login_form.is_valid():
             data = user_login_form.cleaned_data  # .cleaned_data 清洗出合法数据产生一致的输出
             # 检验账号密码是否正确匹配数据库中的某个用户，如果均匹配则返回这个 user 对象
@@ -47,8 +50,10 @@ def user_login(request):
                 return redirect("article:article_list")
             else:
                 return HttpResponse("账号密码输入有误，请重新输入~")
+
         else:
             return HttpResponse("账号密码输入不合法")
+
     elif request.method == 'GET':
         user_login_form = UserLoginForm()
         context = {'form': user_login_form}
@@ -63,7 +68,7 @@ def user_logout(request):
     return redirect("article:article_list")
 
 
-@login_required(login_url='/userprofile/login/')  # 若用户不登录则重定向页面
+@login_required(login_url='/userprofile/login/')  # 调用该函数时，若用户不登录不执行则重定向页面
 def user_delete(request, id):
     if request.method == 'POST':
         user =  User.objects.get(id=id)
@@ -83,8 +88,6 @@ def user_delete(request, id):
 @login_required(login_url='/userprofile/login/')
 def profile_edit(request, id):
     user = User.objects.get(id=id)
-    # user_id 是 OneToOneField 自动生成的字段
-    # profile = Profile.objects.get(user_id=id)
 
     if Profile.objects.filter(user_id=id).exists():
         profile = Profile.objects.get(user_id=id)
@@ -96,13 +99,16 @@ def profile_edit(request, id):
         if request.user != user:
             return HttpResponse("你没有权限修改此用户信息。")
 
+        # 上传的文件保存在request.FILES中，通过参数传递给表单类
         profile_form = ProfileForm(request.POST, request.FILES)
 
         if profile_form.is_valid():
+
             # 取得清洗后的合法数据
             profile_cd = profile_form.cleaned_data
             profile.phone = profile_cd['phone']
             profile.bio = profile_cd['bio']
+
             # 如果 request.FILES 存在文件，则保存
             if 'avatar' in request.FILES:
                 profile.avatar = profile_cd["avatar"]
@@ -114,8 +120,7 @@ def profile_edit(request, id):
             return HttpResponse("注册表单输入有误。请重新输入~")
 
     elif request.method == 'GET':
-        profile_form = ProfileForm()
-        context = { 'profile_form': profile_form, 'profile': profile, 'user': user }
+        context = {'profile': profile, 'user': user}
         return render(request, 'userprofile/edit.html', context)
     else:
         return HttpResponse("请使用GET或POST请求数据")

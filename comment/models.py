@@ -2,14 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 from article.models import ArticlePost
 
+
 # 博文的评论
 class Comment(models.Model):
-    article = models.ForeignKey(
+    article = models.ForeignKey(  # 外键 article是被评论的文章
         ArticlePost,
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    user = models.ForeignKey(
+    user = models.ForeignKey(  # 外键 user是评论的发布者
         User,
         on_delete=models.CASCADE,
         related_name='comments'

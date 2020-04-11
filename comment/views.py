@@ -19,7 +19,7 @@ def post_comment(request, article_id):
             new_comment.article = article
             new_comment.user = request.user
             new_comment.save()
-            return redirect(article)
+            return redirect(article)  # 返回到一个适当的url中-重新定向到文章详情页面
         else:
             return HttpResponse("表单内容有误，请重新填写。")
     # 处理错误请求
