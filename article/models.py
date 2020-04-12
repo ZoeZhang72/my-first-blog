@@ -2,6 +2,7 @@ from django.db import models  # 对数据库的支持
 from django.contrib.auth.models import User  # 导入内建的User模型。
 from django.utils import timezone  # timezone 用于处理时间相关事务。
 from django.urls import reverse  # 路由重定向
+from taggit.managers import TaggableManager  # 多对多关系管理器
 
 
 # 文章栏目数据模型
@@ -35,6 +36,9 @@ class ArticlePost(models.Model):
 
     # 文章更新时间。参数 auto_now=True 指定每次数据更新时自动写入当前时间
     updated = models.DateTimeField(auto_now=True)
+
+    # 文章标签
+    tags = TaggableManager(blank=True)
 
     # 获取文章地址，重新定向
     def get_absolute_url(self):

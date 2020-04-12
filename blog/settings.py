@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'article',  # 激活放置博客代码的app
     'userprofile',  # 激活用户登录登出app
     'comment',  # 激活用户评论app
+    'taggit',  # 文章标签功能
 
 ]
 

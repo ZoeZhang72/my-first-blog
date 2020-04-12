@@ -7,4 +7,4 @@ from .models import ArticlePost  # 引入文章模型
 class ArticlePostForm(forms.ModelForm):
     class Meta:
         model = ArticlePost  # 指明数据模型来源
-        fields = ('title', 'body')  # 定义表单包含的字段
+        fields = ('title', 'body', 'tags')  # 定义表单包含的字段
