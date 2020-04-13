@@ -1,6 +1,4 @@
 <!-- base.html是整个项目的模板基础，所有的网页都从它继承 -->
-
-
 <!-- 载入静态文件 -->
 {% load static %}
 
@@ -11,19 +9,28 @@
 <head>
     <!-- 网站采用的字符编码 -->
     <meta charset="utf-8">
-    <!-- 预留网站标题的位置 -->
+    <!-- 网站标题 -->
     <title>{% block title %}{% endblock %}</title>
     <!-- 引入bootstrap的css文件 -->
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <!-- 引入monikai.css -->
     <link rel="stylesheet" href="{% static 'md_css/monokai.css' %}">
+    <link rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    >
 </head>
 
 <body>
     <!-- 引入导航栏 -->
     {% include 'header.html' %}
-    <!-- 预留具体页面的位置 -->
+    <!-- 新增div容器 -->
+    <div id="wrapper">
     {% block content %}{% endblock content %}
+        <div id="push"></div>
+    </div>
+
     <!-- 引入注脚 -->
     {% include 'footer.html' %}
     <!-- bootstrap.js 依赖 jquery.js 和popper.js，因此在要提前引入 -->
@@ -33,6 +40,29 @@
     <script src="{% static 'popper/popper-1.14.4.js' %}"></script>
     <!-- 引入bootstrap的js文件 -->
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+    {% block script %}{% endblock script %}
+
+    {% include 'back_to_top_func.html' %}
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #wrapper {
+            min-height: 100%;
+            margin-bottom: -40px;
+        }
+
+        #footer,
+        #push {
+            height: 60px;
+        }
+    </style>
+
+
 </body>
 
 </html> 

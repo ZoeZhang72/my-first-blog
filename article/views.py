@@ -7,6 +7,7 @@ from django.contrib.auth.models import User  # 引入User模型
 from django.core.paginator import Paginator  # 引入分页模块
 from django.db.models import Q  # 引入 Q 对象
 from comment.models import Comment
+from comment.forms import CommentForm  # 引入评论表单
 from django.contrib.auth.decorators import login_required
 from .models import ArticleColumn  # 引入栏目模型
 
@@ -48,7 +49,7 @@ def article_list(request):
         article_list = article_list.order_by('-total_views')  # order_by()方法指定对象如何进行排序
 
     # 每页显示 3 篇文章
-    paginator = Paginator(article_list, 3)
+    paginator = Paginator(article_list, 6)
     # 获取 url 中的页码
     page = request.GET.get('page')
     # 将导航对象相应的页码内容返回给 articles
@@ -82,8 +83,11 @@ def article_detail(request, id):  # 参数id是Django自动生成用于索引数
     )
     article.body = md.convert(article.body)
 
+    # 引入评论表单
+    comment_form = CommentForm()
+
     # 需要传递给模板的对象
-    context = {'article': article, 'toc': md.toc, 'comments': comments}
+    context = {'article': article, 'toc': md.toc, 'comments': comments, 'comment_form': comment_form,}
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
 
