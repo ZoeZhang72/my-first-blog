@@ -12,6 +12,7 @@
 
 <!-- 定义放置文章标题的div容器 -->
 <div class="container">
+    <!-- 面包屑导航 -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
@@ -62,11 +63,23 @@
         {% endif %}
     {% endif %}
 
-<!-- 列表循环 -->
-<div class="row mt-2">
-    {% for article in articles %}
-        <!-- 文章内容 -->
-        <div class="col-12">
+    <!-- 列表循环 -->
+    <div class="row mt-2">
+        {% for article in articles %}
+            <!-- 文章内容 -->
+
+            <!-- 标题图 -->
+            {% if article.avatar %}
+                <div class="col-3">
+                    <img src="{{ article.avatar.url }}"
+                         alt="avatar"
+                         style= "border-radius: 20px"
+                         class="img-fluid"
+                    >
+            </div>
+        {% endif %}
+
+        <div class="col">
             <!-- 栏目 -->
             {% if article.column %}
                 <a role="button"
@@ -90,7 +103,7 @@
                 {% for tag in article.tags.all %}
                     <a href="{% url 'article:article_list' %}?tag={{ tag }}"
                        class="badge badge-secondary"
-                       >
+                    >
                         {{ tag }}
                     </a>
                 {% endfor %}
@@ -126,8 +139,8 @@
                     {{ article.updated|date:'Y-m-d' }} 更新
                 </span>
             </p>
-            <hr>
         </div>
+        <hr style="width: 100%;"/>
     {% endfor %}
 </div>
 
@@ -138,9 +151,7 @@
         <span class="step-links">
             <!-- 如果不是第一页，则显示上翻按钮 -->
             {% if articles.has_previous %}
-                <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
-                   class="btn btn-success"
-                >
+                <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}" class="btn btn-success">
                     &laquo; 1
                 </a>
                 <span>...</span>

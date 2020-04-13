@@ -95,18 +95,18 @@ def article_create(request):
     # 判断用户是否提交数据
     if request.method == "POST":
         # 将提交的数据赋值到表单实例中
-        article_post_form = ArticlePostForm(data=request.POST)
+        article_post_form = ArticlePostForm(request.POST, request.FILES)
         # 判断提交的数据是否满足模型的要求
         if article_post_form.is_valid():  # Django内置方法:is_valid，验证数据返回布尔值
             new_article = article_post_form.save(commit=False)  # 保存数据，但暂时不提交到数据库中
             new_article.author = User.objects.get(id=request.user.id)  # 指定登录的用户为作者
+
             # 判断是否有栏目以便关联
             if request.POST['column'] != 'none':
                 # 保存文章栏目
                 new_article.column = ArticleColumn.objects.get(id=request.POST['column'])
                 # 将新文章保存到数据库中
             new_article.save()
-
             # 保存 tags 的多对多关系
             article_post_form.save_m2m()
             # 完成后返回到文章列表
@@ -152,7 +152,6 @@ def article_update(request, id):
 
     # 判断用户是否为 POST 提交表单数据
     if request.method == "POST":
-
         # 将提交的数据赋值到表单实例中
         article_post_form = ArticlePostForm(data=request.POST)
 
@@ -165,29 +164,35 @@ def article_update(request, id):
 
             # 判断标签是否为空
             if request.POST['column'] != 'none':
-                article.column = ArticleColumn.objects.get(
-                    id=request.POST['column'])
+                # 保存文章栏目
+                article.column = ArticleColumn.objects.get(id=request.POST['column'])
             else:
                 article.column = None
 
+            if request.FILES.get('avatar'):
+                article.avatar = request.FILES.get('avatar')
+
+            article.tags.set(*request.POST.get('tags').split(','), clear=True)
+            article.save()
             # 完成后返回到修改后的文章中。需传入文章的 id 值
             return redirect("article:article_detail", id=id)
-
         # 如果数据不合法，返回错误信息
         else:
             return HttpResponse("表单内容有误，请重新填写。")
 
     # 如果用户 GET 请求获取数据
     else:
-
         # 创建表单类实例
         article_post_form = ArticlePostForm()
+
+        # 文章栏目
         columns = ArticleColumn.objects.all()
         # 赋值上下文，将 article 文章对象也传递进去，以便提取旧的内容
         context = {
             'article': article,
             'article_post_form': article_post_form,
             'columns': columns,
+            'tags': ','.join([x for x in article.tags.names()]),
         }
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)
