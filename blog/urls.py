@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include  # 引入include方法,path为Django的路由语法
 from django.conf import settings
 from django.conf.urls.static import static
+import notifications.urls
 
 
 # 正在部署的应用的名称
@@ -21,6 +22,9 @@ urlpatterns = [
 
     # 评论
     path('comment/', include('comment.urls', namespace='comment')),
+
+    # 消息通知
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
 
 ]
 

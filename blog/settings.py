@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'comment',  # 激活用户评论app
     'taggit',  # 文章标签功能
     'ckeditor',  # 激活富文本
+    'mptt',  # 多级评论
+    'notifications',  # 通知系统
 
 ]
 
@@ -74,6 +76,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'blog.wsgi.application'
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 
 # Database
