@@ -24,6 +24,7 @@ class ArticlePost(models.Model):
     # 文章作者。参数 on_delete 用于指定数据删除的方式, 外键ForeignKey解决一对多关系
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    # 浏览量
     total_views = models.PositiveIntegerField(default=0)  # PositiveIntegerField是用于存储正整数的字段
 
     # 文章标题。models.CharField为字符串字段, 用于保存较短的字符串.
@@ -43,6 +44,9 @@ class ArticlePost(models.Model):
 
     # 文章标签
     tags = TaggableManager(blank=True)
+
+    # 文章点赞数
+    likes = models.PositiveIntegerField(default=0)
 
     # 保存时处理图片
     def save(self, *args, **kwargs):

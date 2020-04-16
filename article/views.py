@@ -10,6 +10,9 @@ from comment.models import Comment
 from comment.forms import CommentForm  # 引入评论表单
 from django.contrib.auth.decorators import login_required
 from .models import ArticleColumn  # 引入栏目模型
+from django.views import View
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView
 
 
 # 文章列表
@@ -73,6 +76,19 @@ def article_detail(request, id):  # 参数id是Django自动生成用于索引数
     article.total_views += 1
     article.save(update_fields=['total_views'])
 
+    # 相邻发表文章的快捷导航
+    pre_article = ArticlePost.objects.filter(id__lt=article.id).order_by('-id')
+    next_article = ArticlePost.objects.filter(id__gt=article.id).order_by('id')
+    if pre_article.count() > 0:
+        pre_article = pre_article[0]
+    else:
+        pre_article = None
+
+    if next_article.count() > 0:
+        next_article = next_article[0]
+    else:
+        next_article = None
+
     # 修改 Markdown 语法渲染
     md = markdown.Markdown(
         extensions=[
@@ -87,7 +103,7 @@ def article_detail(request, id):  # 参数id是Django自动生成用于索引数
     comment_form = CommentForm()
 
     # 需要传递给模板的对象
-    context = {'article': article, 'toc': md.toc, 'comments': comments, 'comment_form': comment_form,}
+    context = {'article': article, 'toc': md.toc, 'comments': comments, 'comment_form': comment_form, 'pre_article': pre_article,'next_article': next_article,}
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
 
@@ -130,6 +146,15 @@ def article_create(request):
         context = {'article_post_form': article_post_form, 'columns': columns}
         # 返回模板
         return render(request, 'article/create.html', context)
+
+
+# 点赞数 +1
+class IncreaseLikesView(View):
+    def post(self, request, *args, **kwargs):
+        article = ArticlePost.objects.get(id=kwargs.get('id'))
+        article.likes += 1
+        article.save()
+        return HttpResponse('success')
 
 
 # 安全删除文章
