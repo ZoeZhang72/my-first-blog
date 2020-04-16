@@ -26,6 +26,9 @@ urlpatterns = [
     # 消息通知
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
 
+    # notice，已读未读
+    path('notice/', include('notice.urls', namespace='notice')),
+
 ]
 
 # 上传图片的URL路径

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'ckeditor',  # 激活富文本
     'mptt',  # 多级评论
     'notifications',  # 通知系统
+    'notice',  # 通知（未读已读）
 
 ]
 
