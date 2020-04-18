@@ -74,8 +74,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&3f5gqk1q&70e+jnr8xzc$v1w-*vv4f)z2soz!rm%uw#^p%=0y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = False
+ALLOWED_HOSTS = ['.zoe.com', '127.0.0.1']
 
 
 # Application definition
@@ -183,6 +183,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),  # 指定静态文件存放位置
 )
+# 静态文件收集目录
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 
 
 # SMTP服务器，改为你的邮箱的smtp!
