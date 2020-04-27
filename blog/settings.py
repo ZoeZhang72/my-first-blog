@@ -75,7 +75,7 @@ SECRET_KEY = '&3f5gqk1q&70e+jnr8xzc$v1w-*vv4f)z2soz!rm%uw#^p%=0y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = ['.zoe.com', '127.0.0.1']
+ALLOWED_HOSTS = ['zoezhang72.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
