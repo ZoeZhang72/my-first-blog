@@ -1,4 +1,4 @@
-aiohttp
+aiohttp==3.6.2
 aiomysql==0.0.20
 alabaster==0.7.12
 anaconda-client==1.7.2
